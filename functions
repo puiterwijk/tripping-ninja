@@ -19,7 +19,7 @@ multiply
 ====
 from: |a|b| to: |a*b|0|0|0|0|
 ====
-repeat(sum)
+repeat(sum())
 ----
 
 power
@@ -28,7 +28,7 @@ power
 from: |a|b| to: |a^b|0|0|0|0|
 ====
 >>+<<
-repeat(repeat(sum))
+repeat(repeat(sum()))
 ----
 
 repeat
@@ -37,7 +37,7 @@ function
 ====
 bla
 ====
->[-<[->>>+>+<<<<]>>>>[-<<<<+>>>>]<< function() <]<[-]>>[-<<+>>]<<
+>[-<[->>>+>+<<<<]>>>>[-<<<<+>>>>]<< function <]<[-]>>[-<<+>>]<<
 ----
 
 output
