@@ -51,10 +51,10 @@ def replace_function(programma, name, args, code):
             depth -= 1
         elif programma[laatste] == '(':
             depth += 1
-        elif programma[laatste] == ',' and depth == 1:
+        if programma[laatste] == ',' and depth == 1:
             argvals.append(argval)
             argval = ""
-        else:
+        elif depth != 0:
             argval += programma[laatste]
         laatste += 1
     argvals.append(argval)
