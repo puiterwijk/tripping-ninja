@@ -113,6 +113,8 @@ def main():
     functions = file('functions').read()
     programma = file('program').read()
     programma = replace_functions(programma, functions)
+    if programma.find('(') != -1:
+        print 'Er zijn mogelijk onbekende functies gebruikt'
     programma = optimize(programma)
     print 'Programma: %s' % programma
     input = file('input').read()
