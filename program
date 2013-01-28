@@ -1,2 +1,5 @@
-,
-copy(>>,<<)
+,>,>,<
+power()
+<
+multiply()
+output()
