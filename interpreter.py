@@ -122,7 +122,7 @@ def main():
     uitvoer, tape, tape_pos = executeer(programma, 0, [], input, [0], 0)
     print 'uitvoer: %s' % uitvoer
     print 'tape: %s' % tape
-    print 'tapepos: %d' % tape_pos
+    print 'tape_pos: %d' % tape_pos
 
 if __name__ == '__main__':
     main()
