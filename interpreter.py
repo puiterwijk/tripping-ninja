@@ -38,6 +38,36 @@ def executeer(prog, prog_pos, terug_stap, input, tape, tape_pos):
             terug_stap = terug_stap[1:]
 
 
+def replace_function(programma, name, args, code):
+    eerste = programma.find(name + "(")
+    if eerste == -1:
+        return programma
+    laatste = eerste + len(name) + 1
+    depth = 1
+    argvals = []
+    argval = ""
+    while depth != 0:
+        if programma[laatste] == ')':
+            depth -= 1
+        elif programma[laatste] == '(':
+            depth += 1
+        elif programma[laatste] == ',' and depth == 1:
+            argvals.append(argval)
+            argval = ""
+        else:
+            argval += programma[laatste]
+        laatste += 1
+    argvals.append(argval)
+    if len(args) == 0 and len(argvals) == 1:
+        argvals = []
+    assert len(args) == len(argvals)
+    zoek = programma[eerste:(laatste+1)]
+    i = 0
+    while i < len(args):
+        code = code.replace(args[i], argvals[i])
+        i += 1
+    return programma.replace(zoek, code)
+
 def replace_functions(programma, functions):
     functions = functions.replace("\n", "")
     functions = functions.split("----")
@@ -47,6 +77,7 @@ def replace_functions(programma, functions):
         for function in functions:
             function = function.split('====')
             name = ""
+            args = []
             code = ""
             if len(function) == 2:
                 name = function[0]
@@ -54,10 +85,13 @@ def replace_functions(programma, functions):
             elif len(function) == 3:
                 name = function[0]
                 code = function[2]
-               
+            elif len(function) == 4:
+                name = function[0]
+                args = function[1].split(",")
+                code = function[3]
             name = name.replace(" ", "")
-
-            programma = programma.replace(name, code)
+            if name != "":
+                programma = replace_function(programma, name, args, code)
         replaced = prog_old != programma
     return programma
 
