@@ -35,7 +35,7 @@ repeat
 ====
 function
 ====
-bla
+from: |a|b|0|0|0|0| to: |f(a ,b)|0|0|0|0|
 ====
 >[-<[->>>+>+<<<<]>>>>[-<<<<+>>>>]<< function <]<[-]>>[-<<+>>]<<
 ----
@@ -43,7 +43,20 @@ bla
 output
 ====
 ====
+from: |a| to: |0|
+output: a
 ====
 .
 [-]
 ----
+
+copy
+====
+to,from
+====
+from: |a|0..n|0|0| to: |a|0..n|a|0|
+====
+[-to+>+<from]
+to>
+[-<from+to>]
+<from
