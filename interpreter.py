@@ -61,7 +61,7 @@ def replace_function(programma, name, args, code):
     if len(args) == 0 and len(argvals) == 1:
         argvals = []
     assert len(args) == len(argvals)
-    zoek = programma[eerste:(laatste+1)]
+    zoek = programma[eerste:(laatste)]
     i = 0
     while i < len(args):
         code = code.replace(args[i], argvals[i])
@@ -119,6 +119,7 @@ def main():
     uitvoer, tape, tape_pos = executeer(programma, 0, [], input, [0], 0)
     print 'uitvoer: %s' % uitvoer
     print 'tape: %s' % tape
+    print 'tapepos: %d' % tape_pos
 
 if __name__ == '__main__':
     main()
