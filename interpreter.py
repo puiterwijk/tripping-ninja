@@ -118,6 +118,7 @@ def main():
     programma = optimize(programma)
     print 'Programma: %s' % programma
     input = file('input').read()
+    print
     uitvoer, tape, tape_pos = executeer(programma, 0, [], input, [0], 0)
     print 'uitvoer: %s' % uitvoer
     print 'tape: %s' % tape
