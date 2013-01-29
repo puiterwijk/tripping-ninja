@@ -1,43 +1,3 @@
-def executeer(prog, prog_pos, terug_stap, input, tape, tape_pos):
-    output = ""
-    while True:
-        assert tape_pos >= 0
-        while len(tape) <= tape_pos:
-            tape = tape + [0]
-        if prog_pos >= len(prog):
-            return output, tape, tape_pos
-        command = prog[prog_pos]
-        prog_pos += 1
-        if command == '+':
-            tape[tape_pos] += 1
-        elif command == '-':
-            tape[tape_pos] -= 1
-        elif command == '<':
-            tape_pos -= 1
-        elif command == '>':
-            tape_pos += 1
-        elif command == ',':
-            tape[tape_pos] = int(input[0])
-            input = input[1:]
-        elif command == '.':
-            output = output + " " + str(tape[tape_pos])
-        elif command == '[':
-            if tape[tape_pos] == 0:
-                # skip to corresponding ]
-                depth = 1
-                while depth != 0:
-                    if prog[prog_pos] == ']':
-                        depth -= 1
-                    elif prog[prog_pos] == '[':
-                        depth += 1
-                    prog_pos += 1
-            else:
-                terug_stap = [prog_pos-1] + terug_stap
-        elif command == ']':
-            prog_pos = terug_stap[0]
-            terug_stap = terug_stap[1:]
-
-
 def replace_function(programma, name, args, code):
     eerste = programma.find(name + "(")
     if eerste == -1:
@@ -116,13 +76,7 @@ def main():
     if programma.find('(') != -1:
         print 'Er zijn mogelijk onbekende functies gebruikt: %s' % programma
     programma = optimize(programma)
-    print 'Programma: %s' % programma
-    input = file('input').read()
-    print
-    uitvoer, tape, tape_pos = executeer(programma, 0, [], input, [0], 0)
-    print 'uitvoer: %s' % uitvoer
-    print 'tape: %s' % tape
-    print 'tape_pos: %d' % tape_pos
+    print programma
 
 if __name__ == '__main__':
     main()
