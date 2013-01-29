@@ -118,8 +118,14 @@ def compileer(programma):
     return nieuw
 
 def main():
-    functions = file('functions').read()
-    programma = file('program').read()
+    input = file('input').read().split("////")
+    functions = ""
+    programma = ""
+    if len(input) == 1:
+        programma = input[0]
+    else:
+        functions = input[0]
+        programma = input[1]
     programma = replace_functions(programma, functions)
     if programma.find('(') != -1:
         print 'Er zijn mogelijk onbekende functies gebruikt: %s' % programma
