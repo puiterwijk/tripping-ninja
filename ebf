@@ -67,7 +67,7 @@ def executeer(prog, prog_pos, terug_stap, tape, tape_pos):
             #input = input[1:]
             tape[tape_pos] = krijg_getal()
         elif command == '.':
-            output = output + " " + str(tape[tape_pos])
+            output = output + str(tape[tape_pos])
         elif command == '[':
             if tape[tape_pos] == 0:
                 # skip to corresponding ]
@@ -121,7 +121,7 @@ def replace_functions(programma, functions):
     for function in functions:
         function = function.split('====')
         if len(function) == 2:
-            name_with_func = function[0]
+            name_with_func = function[0].split('\n')[0]
             code = function[1]
             func_start = name_with_func.find('(')
             func_end = name_with_func.find(')')
@@ -132,7 +132,6 @@ def replace_functions(programma, functions):
             name = name.replace(" ", "")
             if name != "":
                 funcs.append({'name': name, 'args': args, 'code': code})
-    print 'funcs: %s' % funcs
     replaced = True
     while replaced:
         prog_old = programma
@@ -180,7 +179,7 @@ def compileer(programma):
 def compileer_c(programma, cc='gcc'):
     return Popen(split('gcc -xc -o /dev/stdout -'), stdout=PIPE, stdin=PIPE).communicate(input=programma)[0]
 
-def run(input, output, no_optimize, no_compile, no_assemble, interpret, tape):
+def run(input, output, no_optimize, no_compile, no_assemble, interpret, print_tape):
     if output == None:
         if no_compile or no_assemble or interpret:
             output = '-'
@@ -209,7 +208,7 @@ def run(input, output, no_optimize, no_compile, no_assemble, interpret, tape):
         # Interpret
         output, tape, tape_pos = executeer(programma, 0, [], [0], 0)
         outputf.write(output)
-        if tape:
+        if print_tape:
             outputf.write("\n")
             outputf.write("Tape: [")
             for char in tape:

@@ -1,30 +1,37 @@
 sum()
+from: |a|b| to: |a+b|0|
 ====
 >[-<+>]<
 ----
 
 min()
+from: |a|b| to: |a-b|0|
 ====
 >[-<->]<
 ----
 
 multiply()
+from: |a|b|0|0|0|0| to: |a*b|0|0|0|0|0|
 ====
 repeat(sum())
 ----
 
 power()
+from: |a|b|0|0|0|0| to: |a^b|0|0|0|0|0|
 ====
 >>+<<
 repeat(repeat(sum()))
 ----
 
 repeat(function)
+from: |a|b|0|0|0|0| to: |f a b|0|0|0|0|0|
 ====
 >[-<[->>>+>+<<<<]>>>>[-<<<<+>>>>]<< function <]<[-]>>[-<<+>>]<<
 ----
 
 output()
+from: |a| to: |0|
+output: a
 ====
 output: a
 .
@@ -32,6 +39,7 @@ output: a
 ----
 
 copy(to,from)
+from: |a|1..n|0|0| to: |a|1..n|a|0|
 ====
 [-to+>+<from]
 to>
@@ -42,3 +50,4 @@ to>
 
 ,>,<
 multiply()
+output()
