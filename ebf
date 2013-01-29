@@ -35,6 +35,55 @@ post_code = '''
     }
 }'''
 
+def krijg_getal():
+    gekregen = None
+    while not gekregen:
+        try:
+            gekregen = int(sys.stdin.read(1))
+        except:
+            pass
+    return gekregen
+
+def executeer(prog, prog_pos, terug_stap, tape, tape_pos):
+    output = ""
+    while True:
+        assert tape_pos >= 0
+        while len(tape) <= tape_pos:
+            tape = tape + [0]
+        if prog_pos >= len(prog):
+            return output, tape, tape_pos
+        command = prog[prog_pos]
+        prog_pos += 1
+        if command == '+':
+            tape[tape_pos] += 1
+        elif command == '-':
+            tape[tape_pos] -= 1
+        elif command == '<':
+            tape_pos -= 1
+        elif command == '>':
+            tape_pos += 1
+        elif command == ',':
+            #tape[tape_pos] = int(input[0])
+            #input = input[1:]
+            tape[tape_pos] = krijg_getal()
+        elif command == '.':
+            output = output + " " + str(tape[tape_pos])
+        elif command == '[':
+            if tape[tape_pos] == 0:
+                # skip to corresponding ]
+                depth = 1
+                while depth != 0:
+                    if prog[prog_pos] == ']':
+                        depth -= 1
+                    elif prog[prog_pos] == '[':
+                        depth += 1
+                    prog_pos += 1
+            else:
+                terug_stap = [prog_pos-1] + terug_stap
+        elif command == ']':
+            prog_pos = terug_stap[0]
+            terug_stap = terug_stap[1:]
+
 def replace_function(programma, name, args, code):
     eerste = programma.find(name + "(")
     if eerste == -1:
@@ -133,9 +182,7 @@ def compileer_c(programma, cc='gcc'):
 
 def run(input, output, no_optimize, no_compile, no_assemble, interpret, tape):
     if output == None:
-        if no_compile:
-            output = '-'
-        elif no_assemble:
+        if no_compile or no_assemble or interpret:
             output = '-'
         else:
             output = 'a.out'
@@ -160,6 +207,14 @@ def run(input, output, no_optimize, no_compile, no_assemble, interpret, tape):
         programma = optimize(programma)
     if interpret:
         # Interpret
+        output, tape, tape_pos = executeer(programma, 0, [], [0], 0)
+        outputf.write(output)
+        if tape:
+            outputf.write("\n")
+            outputf.write("Tape: [")
+            for char in tape:
+                outputf.write("%d, " % char)
+            outputf.write("]\n")
     else:
         # Compile/assemble
         if not no_compile:
