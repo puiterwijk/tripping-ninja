@@ -14,6 +14,11 @@ int *tape = NULL;
 
 void main(int argc, char **argv)
 {
+    if(argc > 1 && ((strcmp(argv[1], "-h") == 0) || (strcmp(argv[1], "--help") == 0)))
+    {
+        printf("Compiled Enhanced Brainfuck program. Use -t for tape output\\n");
+        exit(0);
+    };
     tape = malloc(sizeof(int));
     '''
 
@@ -131,7 +136,7 @@ def run(input, output, no_optimize, no_compile, no_assemble):
         if no_compile:
             output = '-'
         elif no_assemble:
-            output = 'a.c'
+            output = '-'
         else:
             output = 'a.out'
     inputf = file(input)
