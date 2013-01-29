@@ -128,7 +128,12 @@ def compileer_c(programma, cc='gcc'):
 
 def run(input, output, no_optimize, no_compile, no_assemble):
     if output == None:
-        output = 'a.out'
+        if no_compile:
+            output = '-'
+        elif no_assemble:
+            output = 'a.c'
+        else:
+            output = 'a.out'
     inputf = file(input)
     inputr = inputf.read().split("////")
     if output == '-':
