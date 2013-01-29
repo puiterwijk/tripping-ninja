@@ -1,3 +1,6 @@
+from subprocess import Popen, PIPE, STDOUT
+from shlex import split
+
 pre_code = '''#include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -117,6 +120,9 @@ def compileer(programma):
     nieuw += post_code
     return nieuw
 
+def compileer_c(programma, cc='gcc'):
+    return Popen(split('gcc -xc -o /dev/stdout -'), stdout=PIPE, stdin=PIPE).communicate(input=programma)[0]
+
 def main():
     input = file('input').read().split("////")
     functions = ""
@@ -131,6 +137,7 @@ def main():
         print 'Er zijn mogelijk onbekende functies gebruikt: %s' % programma
     programma = optimize(programma)
     programma = compileer(programma)
+    programma = compileer_c(programma)
     print programma
 
 if __name__ == '__main__':
