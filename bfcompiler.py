@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import sys
 from argparse import ArgumentParser
 from subprocess import Popen, PIPE, STDOUT
