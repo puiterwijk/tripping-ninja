@@ -117,27 +117,27 @@ def replace_function(programma, name, args, code):
 def replace_functions(programma, functions):
     functions = functions.replace("\n", "")
     functions = functions.split("----")
+    funcs = []
+    for function in functions:
+        function = function.split('====')
+        if len(function) == 2:
+            name_with_func = function[0]
+            code = function[1]
+            func_start = name_with_func.find('(')
+            func_end = name_with_func.find(')')
+            assert func_start != -1
+            assert func_end != -1
+            name = name_with_func[:func_start]
+            args = name_with_func[(func_start+1):func_end].split(",")
+            name = name.replace(" ", "")
+            if name != "":
+                funcs.append({'name': name, 'args': args, 'code': code})
+    print 'funcs: %s' % funcs
     replaced = True
     while replaced:
         prog_old = programma
-        for function in functions:
-            function = function.split('====')
-            name = ""
-            args = []
-            code = ""
-            if len(function) == 2:
-                name = function[0]
-                code = function[1]
-            elif len(function) == 3:
-                name = function[0]
-                code = function[2]
-            elif len(function) == 4:
-                name = function[0]
-                args = function[1].split(",")
-                code = function[3]
-            name = name.replace(" ", "")
-            if name != "":
-                programma = replace_function(programma, name, args, code)
+        for func in funcs:
+            programma = replace_function(programma, func['name'], func['args'], func['code'])
         replaced = prog_old != programma
     return programma
 
