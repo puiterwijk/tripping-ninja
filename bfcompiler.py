@@ -1,3 +1,5 @@
+import sys
+from argparse import ArgumentParser
 from subprocess import Popen, PIPE, STDOUT
 from shlex import split
 
@@ -123,22 +125,45 @@ def compileer(programma):
 def compileer_c(programma, cc='gcc'):
     return Popen(split('gcc -xc -o /dev/stdout -'), stdout=PIPE, stdin=PIPE).communicate(input=programma)[0]
 
-def main():
-    input = file('input').read().split("////")
+def run(input, output, no_optimize, no_compile, no_assemble):
+    if output == None:
+        output = 'a.out'
+    inputf = file(input)
+    inputr = inputf.read().split("////")
+    if output == '-':
+        outputf = sys.stdout
+    else:
+        outputf = file(output, 'w')
     functions = ""
     programma = ""
     if len(input) == 1:
-        programma = input[0]
+        programma = inputr[0]
     else:
-        functions = input[0]
-        programma = input[1]
+        functions = inputr[0]
+        programma = inputr[1]
+    inputf.close()
     programma = replace_functions(programma, functions)
     if programma.find('(') != -1:
-        print 'Er zijn mogelijk onbekende functies gebruikt: %s' % programma
-    programma = optimize(programma)
-    programma = compileer(programma)
-    programma = compileer_c(programma)
-    print programma
+        print 'There may have been used undefined functions: %s' % programma
+    if not no_optimize:
+        programma = optimize(programma)
+    if not no_compile:
+        programma = compileer(programma)
+        if not no_assemble:
+            programma = compileer_c(programma)
+    outputf.write(programma)
+    outputf.close()
+
+def parse_args():
+    parser = ArgumentParser(description='Compile Enhanced BrainF*ck')
+    parser.add_argument('input', help='The input file')
+    parser.add_argument('-o', '--output', help='Output file name')
+    parser.add_argument('-no', '--no-optimize', help='Disable BF optimization', action='store_true')
+    parser.add_argument('-nc', '--no-compile', help='Do not compile to C', action='store_true')
+    parser.add_argument('-na', '--no-assemble', help='Do not compile to machine code', action='store_true')
+    result = parser.parse_args()
+    return result
 
 if __name__ == '__main__':
-    main()
+    args = parse_args()
+    run(args.input, args.output, args.no_optimize, args.no_compile, args.no_assemble)
