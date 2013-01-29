@@ -1,3 +1,29 @@
+pre_code = '''#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+
+int tape_len = 1;
+int tape_pos = 0;
+int *tape = NULL;
+
+void main(int argc, char **argv)
+{
+    tape = malloc(sizeof(int));
+    '''
+
+post_code = '''
+    if(argc > 1 && ((strcmp(argv[1], "-t") == 0) || (strcmp(argv[1], "--tape") == 0)))
+    {
+        printf("\\nTape: [");
+        int i;
+        for(i = 0; i < tape_len; i++)
+        {   
+            printf("%d, ", tape[i]);
+        }   
+        printf("]\\n");
+    }
+}'''
+
 def replace_function(programma, name, args, code):
     eerste = programma.find(name + "(")
     if eerste == -1:
@@ -69,6 +95,28 @@ def optimize(programma):
         replaced = prog_old != programma
     return programma
 
+def compileer(programma):
+    nieuw = pre_code
+    for char in programma:
+        if char == '-':
+            nieuw += 'tape[tape_pos]--;'
+        elif char == '+':
+            nieuw += 'tape[tape_pos]++;'
+        elif char == '<':
+            nieuw += 'tape_pos--; assert(tape_pos >= 0);'
+        elif char == '>':
+            nieuw += 'tape_pos++; if(tape_pos >= tape_len){tape = realloc(tape, sizeof(int) * tape_pos); tape_len++;};'
+        elif char == '[':
+            nieuw += 'while(tape[tape_pos]){'
+        elif char == ']':
+            nieuw += '};'
+        elif char == ',':
+            nieuw += 'tape[tape_pos] = fgetc(stdin)-48;'
+        elif char == '.':
+            nieuw += 'printf("%d", tape[tape_pos]);'
+    nieuw += post_code
+    return nieuw
+
 def main():
     functions = file('functions').read()
     programma = file('program').read()
@@ -76,6 +124,7 @@ def main():
     if programma.find('(') != -1:
         print 'Er zijn mogelijk onbekende functies gebruikt: %s' % programma
     programma = optimize(programma)
+    programma = compileer(programma)
     print programma
 
 if __name__ == '__main__':

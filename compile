@@ -1,0 +1,2 @@
+#!/usr/bin/bash
+python bfcompiler.py | gcc -o compiled -xc -
