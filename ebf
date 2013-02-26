@@ -44,16 +44,16 @@ post_code = '''
     }
 }'''
 
-def krijg_getal():
-    gekregen = None
-    while not gekregen:
+def get_number():
+    got = None
+    while not got:
         try:
-            gekregen = int(sys.stdin.read(1))
+            got = int(sys.stdin.read(1))
         except:
             pass
-    return gekregen
+    return got
 
-def executeer(prog, prog_pos, terug_stap, tape, tape_pos):
+def execute(prog, prog_pos, terug_stap, tape, tape_pos):
     output = ""
     while True:
         assert tape_pos >= 0
@@ -74,7 +74,7 @@ def executeer(prog, prog_pos, terug_stap, tape, tape_pos):
         elif command == ',':
             #tape[tape_pos] = int(input[0])
             #input = input[1:]
-            tape[tape_pos] = krijg_getal()
+            tape[tape_pos] = get_number()
         elif command == '.':
             output = output + str(tape[tape_pos])
         elif command == '[':
@@ -215,7 +215,7 @@ def run(input, output, no_optimize, no_compile, no_assemble, interpret, print_ta
         programma = optimize(programma)
     if interpret:
         # Interpret
-        output, tape, tape_pos = executeer(programma, 0, [], [0], 0)
+        output, tape, tape_pos = execute(programma, 0, [], [0], 0)
         outputf.write(output)
         if print_tape:
             outputf.write("\n")
